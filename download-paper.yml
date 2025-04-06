@@ -1,0 +1,26 @@
+name: Download PaperMC
+
+on:
+  push: # Запускается при пуше в main
+  workflow_dispatch: # Позволяет запускать вручную через браузер
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download PaperMC
+        run: |
+          curl -o paper-1.21.1-133.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
+
+      - name: Commit file to repository
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add paper-1.21.1-133.jar
+          git commit -m "Add PaperMC 1.21.1-133"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
